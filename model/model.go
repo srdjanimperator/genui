@@ -11,6 +11,7 @@ const (
 	Checkbox GuiFormCtrlType = "CHECK_BOX"
 )
 
+// GuiForm
 type GuiForm struct {
 	Code  string `json:"code"`
 	Title string `json:"title"`
