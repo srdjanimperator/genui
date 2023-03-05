@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+
+  restapi:
+    container_name: restapi_cnt
+    build: 
+      context: .
+      dockerfile: resthttp/Dockerfile
+    ports:
+      - "7001:7001"
+    # networks:
+    #   - genui-net
+    volumes:
+      - pgdbvol:/var/lib/posgresql/data
+    environment:
+      - DB_HOST=pgdb
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=genuidb
+    depends_on:
+      - pgdb
+
+  pgdb:
+    container_name: pgdb_cnt
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=genuidb
+    ports:
+      - "5432:5432"
+  
+  pgadmin:
+    container_name: pgadmin_cnt
+    image: dpage/pgadmin4:6
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@genui.com
+      - PGADMIN_DEFAULT_PASSWORD=r00t
+    ports:
+      - "7002:80"
+    
+volumes:
+  pgdbvol:
+    driver: local
+
+# networks:
+#   genui-net:
+#     driver: bridge
