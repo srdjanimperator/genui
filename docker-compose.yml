@@ -11,6 +11,7 @@ services:
       - "7001:7001"
     # networks:
     #   - genui-net
+    ### !!!! TODO: OVO U PG DOLE!!!
     volumes:
       - pgdbvol:/var/lib/posgresql/data
     environment:
@@ -42,7 +43,33 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=r00t
     ports:
       - "7002:80"
-    
+
+  mongo:
+    container_name: mongodb_cnt
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongouser
+      - MONGO_INITDB_ROOT_PASSWORD=r00t
+    ports:
+      - "27017:27017"
+  
+  mongo-express:
+    container_name: mongoexpress_cnt
+    image: mongo-express
+    restart: always
+    ports:
+      - "7003:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=mongouser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=r00t
+      - ME_CONFIG_BASICAUTH_USERNAME=expressuser
+      - ME_CONFIG_BASICAUTH_PASSWORD=r00t
+    depends_on:
+      - mongo
+
 volumes:
   pgdbvol:
     driver: local
